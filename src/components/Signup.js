@@ -20,6 +20,8 @@ const Signup = () => {
     setError('');
     try {
       const user = await signUp(email, password);
+      console.log(user)
+
       setShowVerification(true); 
 
 

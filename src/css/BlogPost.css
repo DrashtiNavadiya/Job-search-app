@@ -1,0 +1,20 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  
+  .grid-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .grid-item img {
+    width: 100%;
+    max-height: 200px; /* Set a fixed height */
+    object-fit: cover; /* Ensures the image covers the container while preserving aspect ratio */
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
