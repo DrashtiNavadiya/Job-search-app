@@ -1,0 +1,8 @@
+.navbar-nav.ml-auto {
+    margin-left: auto;
+  }
+  
+  .navbar-nav {
+    flex-direction: row;
+  }
+  
