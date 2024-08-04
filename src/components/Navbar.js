@@ -42,20 +42,6 @@ useEffect(() => {
     window.removeEventListener('storage', checkAuthStatus); // Cleanup on unmount
   };
 }, []);
-  // useEffect(() => {
-  //   const currentUser = userPool.getCurrentUser();
-  //   if (currentUser) {
-  //     currentUser.getSession((err, session) => {
-  //       if (err || !session.isValid()) {
-  //         setIsAuthenticated(false);
-  //       } else {
-  //         setIsAuthenticated(true);
-  //       }
-  //     });
-  //   } else {
-  //     setIsAuthenticated(false);
-  //   }
-  // }, []);
 
   const handleSignOut = () => {
     const currentUser = userPool.getCurrentUser();

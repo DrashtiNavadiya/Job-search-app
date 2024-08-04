@@ -18,3 +18,7 @@
     border-radius: 8px;
     margin-bottom: 10px;
   }
+  .card-img-top {
+    height: 200px;
+    object-fit: cover;
+  }
