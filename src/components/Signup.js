@@ -25,7 +25,7 @@ const Signup = () => {
       setShowVerification(true); 
 
 
-      const response = await axios.post('https://mwkn4w753j.execute-api.us-east-1.amazonaws.com/prod/users', {
+      await axios.post('https://mwkn4w753j.execute-api.us-east-1.amazonaws.com/prod/users', {
         firstName,
         lastName,
         email,

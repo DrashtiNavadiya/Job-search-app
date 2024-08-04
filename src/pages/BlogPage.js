@@ -1,12 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Container, Card, Button, Row} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../css/BlogPage.css';
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
+import { AWS_CONFIG } from '../constant';
+
+
+const poolData = {
+  UserPoolId: AWS_CONFIG.UserPoolId,
+  ClientId: AWS_CONFIG.ClientId
+};
+
+const userPool = new CognitoUserPool(poolData);
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -31,8 +44,39 @@ const BlogPage = () => {
       }
     };
 
+    const checkAuthStatus = () => {
+      const currentUser = userPool.getCurrentUser();
+      if (currentUser) {
+        currentUser.getSession((err, session) => {
+          if (err || !session.isValid()) {
+            setIsAuthenticated(false);
+          } else {
+            setIsAuthenticated(true);
+          }
+        });
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+
     fetchBlogs();
+    checkAuthStatus(); // Check authentication status on component mount
+
+    // Add event listener to update auth status when user signs in or out
+    window.addEventListener('storage', checkAuthStatus);
+
+    return () => {
+      window.removeEventListener('storage', checkAuthStatus); // Cleanup on unmount
+    };
   }, []);
+  const handleButtonClick = () => {
+    if (isAuthenticated) {
+      navigate('/my-posts'); // Redirect to /my-posts if authenticated
+    } else {
+      navigate('/login'); // Redirect to /login if not authenticated
+    }
+  };
+
 
   if (error) {
     return <div>{error}</div>;
@@ -48,9 +92,7 @@ const BlogPage = () => {
       <Row className="hero-section text-center">
         <h1>Welcome to Our Blog</h1>
         <p>Explore a variety of topics, insights, and stories from our authors.</p>
-        <Link to="/login">
-          <Button variant="primary">Create a New Post</Button>
-        </Link>
+          <Button variant="primary"  onClick={handleButtonClick}>Create a New Post</Button>
       </Row>
 
       {/* Blog List */}
