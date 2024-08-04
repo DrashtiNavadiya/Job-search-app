@@ -171,12 +171,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Container, Form, Button } from 'react-bootstrap';
 import '../css/BlogPost.css';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const BlogPost = () => {
   const [userBlogs, setUserBlogs] = useState([]);
-  
+  const navigate = useNavigate();
   const [newPost, setNewPost] = useState({
     title: '',
     content: '',
@@ -263,6 +264,9 @@ const BlogPost = () => {
     }
   };
   
+  const handleBlogClick = (postId) => {
+    navigate(`/blogdetail/${postId}`); // Redirect to BlogDetail page with postId
+  };
 
   return (
     <Container className="mt-4">
@@ -326,6 +330,7 @@ const BlogPost = () => {
           {userBlogs.length > 0 ? (
             userBlogs.map((blog) => (
               <div className="grid-item" key={blog.postId}>
+              <div  onClick={() => handleBlogClick(blog.postId)}>
                 {blog.imageKey && (
                   <img
                     src={`https://blogpoststorage.s3.amazonaws.com/${blog.imageKey}`}
@@ -336,6 +341,7 @@ const BlogPost = () => {
                 <h3>{blog.title}</h3>
                 <p>{blog.authorName || 'Unknown Author'}</p>
                 <p>{blog.date}</p>
+                </div>
                 <Button
                   variant="danger"
                   onClick={() => handleDelete(blog.postId)}

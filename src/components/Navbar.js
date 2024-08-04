@@ -16,8 +16,9 @@ const userPool = new CognitoUserPool(poolData);
 const NavbarComponent = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
+// Check authentication status on component mount
+useEffect(() => {
+  const checkAuthStatus = () => {
     const currentUser = userPool.getCurrentUser();
     if (currentUser) {
       currentUser.getSession((err, session) => {
@@ -30,7 +31,31 @@ const NavbarComponent = () => {
     } else {
       setIsAuthenticated(false);
     }
-  }, []);
+  };
+
+  checkAuthStatus(); // Initial authentication check
+
+  // Add event listener to update auth status when user signs in or out
+  window.addEventListener('storage', checkAuthStatus);
+
+  return () => {
+    window.removeEventListener('storage', checkAuthStatus); // Cleanup on unmount
+  };
+}, []);
+  // useEffect(() => {
+  //   const currentUser = userPool.getCurrentUser();
+  //   if (currentUser) {
+  //     currentUser.getSession((err, session) => {
+  //       if (err || !session.isValid()) {
+  //         setIsAuthenticated(false);
+  //       } else {
+  //         setIsAuthenticated(true);
+  //       }
+  //     });
+  //   } else {
+  //     setIsAuthenticated(false);
+  //   }
+  // }, []);
 
   const handleSignOut = () => {
     const currentUser = userPool.getCurrentUser();
@@ -44,12 +69,11 @@ const NavbarComponent = () => {
 
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
-      <Navbar.Brand as={Link} to="/">Job Search Platform</Navbar.Brand>
+      <Navbar.Brand as={Link} to="/">Blog Platform</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          <Nav.Link as={Link} to="/">Home</Nav.Link>
-          <Nav.Link as={Link} to="/blog">Blog</Nav.Link>
+          <Nav.Link as={Link} to="/">Blog</Nav.Link>
           <Nav.Link as={Link} to="/profile">Profile</Nav.Link>
         </Nav>
         <Nav className="ml-auto">
